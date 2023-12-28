@@ -40,6 +40,7 @@ namespace bdkurs
             editClient.Enabled = _user.IsAdmin;
             deleteClient.Enabled = _user.IsAdmin;
             saveClient.Enabled = _user.IsAdmin;
+            файлToolStripMenuItem.Enabled = _user.IsAdmin;
         }
         private void MainForm_Load(object sender, EventArgs e)
         {
@@ -49,10 +50,12 @@ namespace bdkurs
             CreateColumnsDevices();
             CreateColumnsService();
             CreateColumnsEmploye();
+            CreateColumnsRepair();
             RefreshDataGridClients(dataGridView1);
             RefreshDataGridDevices(dataGridViewDevice);
             RefreshDataGridService(dataGridViewService);
             RefreshDataGridEmploye(dataGridViewEmploye);
+            RefreshDataGridRepair(dataGridViewRepair);
 
         }
         private void управлениеToolStripMenuItem_Click(object sender, EventArgs e)
@@ -880,201 +883,223 @@ namespace bdkurs
 
         }
 
+        /// <summary>
+        /// репаир (отчет)
+        /// </summary>
+
         private void buttonNewRepair_Click(object sender, EventArgs e)
         {
             AddRepairForm addRepairForm = new AddRepairForm();
             addRepairForm.Show();
         }
 
-        ///
+        
+        private void CreateColumnsRepair()
+        {
+            dataGridViewRepair.Columns.Add("idrepair", "id");
+            dataGridViewRepair.Columns.Add("fioclient", "ФИО Клиента");
+            dataGridViewRepair.Columns.Add("duedate", "Дата сдачи устройства");
+            dataGridViewRepair.Columns.Add("nameservice", "Название ремонтных работ");
+            dataGridViewRepair.Columns.Add("fioemploye", "ФИО Сотрудника");
+            dataGridViewRepair.Columns.Add("serialnumber", "Серийный номер");
+            dataGridViewRepair.Columns.Add("price", "Стоимость");
+            dataGridViewRepair.Columns.Add("daterepair", "Дата окончания ремонта");
+            dataGridViewRepair.Columns.Add("EsNew", String.Empty);
+        }
+
+        private void ClearFieldsRepair()
+        {
+            textBoxIDRepair.Text = "";
+            textBoxClientRepair.Text = "";
+            textBoxDueDateRepair.Text = "";
+            textBoxEmployeRepair.Text = "";
+            textBoxServiceRepair.Text = "";
+            textBoxSerialNumRepair.Text = "";
+            textBoxPriceRepair.Text = "";
+            dateTimePickerDateRepair.Value = DateTime.Now;
+        }
+
+
+        private void ReadSingleRowRepair(DataGridView dgw, IDataRecord record)
+        {
+            dgw.Rows.Add(record.GetInt32(0), record.GetString(1), record.GetDateTime(2), record.GetString(3), record.GetString(4), record.GetString(5), record.GetInt32(6), record.GetDateTime(7), RowState.ModifiedNew);
+        }
+        private void RefreshDataGridRepair(DataGridView dgw)
+        {
+            dgw.Rows.Clear();
+
+            string queryString = $"select * from repair";
+
+            SqlCommand command = new SqlCommand(queryString, db.getConnection());
+
+            db.openConnection();
+
+            SqlDataReader reader = command.ExecuteReader();
+
+            while (reader.Read())
+            {
+                ReadSingleRowRepair(dgw, reader);
+            }
+            reader.Close();
+            db.closeConnection();
+        }
+
+
+        private void ChangeRepair()
+        {
+            var selectedRowIndex = dataGridViewRepair.CurrentCell.RowIndex;
+            var id = textBoxIDRepair.Text;
+            string fioclient = textBoxClientRepair.Text;
+            string serialnumber = textBoxSerialNumRepair.Text;
+            var price = int.Parse(textBoxPriceRepair.Text);
+            DateTime duedate = DateTime.Parse(textBoxDueDateRepair.Text);
+            string nameservice = textBoxServiceRepair.Text;
+            string fioemploye = textBoxEmployeRepair.Text;
+            DateTime daterepair = dateTimePickerDateRepair.Value;
+
+            if (dataGridViewRepair.Rows[selectedRowIndex].Cells[0].Value.ToString() != string.Empty)
+            {
+                dataGridViewRepair.Rows[selectedRowIndex].SetValues(fioclient, duedate, nameservice, fioemploye, serialnumber, price, daterepair);
+                dataGridViewRepair.Rows[selectedRowIndex].Cells[8].Value = RowState.Modified;
+            }
+        }
+
+        private void deleteRowRepair()
+        {
+            int index = dataGridViewRepair.CurrentCell.RowIndex;
+            dataGridViewRepair.Rows[index].Visible = false;
+            dataGridViewRepair.Rows[index].Cells[5].Value = RowState.Deleted;
+
+        }
+
+        private void UpdateRepair()
+        {
+            db.openConnection();
+
+            for (int index = 0; index < dataGridViewRepair.Rows.Count; index++)
+            {
+                var rowState = (RowState)dataGridViewRepair.Rows[index].Cells[8].Value;
+
+                if (rowState == RowState.Existed)
+                    continue;
+
+                if (rowState == RowState.Deleted)
+                {
+                    var id = Convert.ToInt32(dataGridViewRepair.Rows[index].Cells[0].Value.ToString());
+                    string deleteQuery = $"delete from repair where idrepair = '{id}'";
+
+                    SqlCommand command = new SqlCommand(deleteQuery, db.getConnection());
+                    command.ExecuteNonQuery();
+                }
+                if (rowState == RowState.Modified)
+                {
+                    var idrepair = dataGridViewRepair.Rows[index].Cells[0].Value.ToString();
+                    //string fioclient = dataGridViewRepair.Rows[index].Cells[1].Value.ToString();
+                    //string serialnumber = dataGridViewRepair.Rows[index].Cells[2].Value.ToString();
+                    //var price = dataGridViewRepair.Rows[index].Cells[3].Value.ToString();
+                    //DateTime duedate = Convert.ToDateTime(dataGridViewRepair.Rows[index].Cells[4].Value);
+                    //string nameservice = dataGridViewRepair.Rows[index].Cells[5].Value.ToString();
+                    //string fioemploye = dataGridViewRepair.Rows[index].Cells[6].Value.ToString();
+                    DateTime daterepair = Convert.ToDateTime(dataGridViewRepair.Rows[index].Cells[7].Value);
+                    
+
+
+                    string changeQuery = $"update repair set  daterepair = '{daterepair}'  where idrepair = '{idrepair}'";
+
+                    SqlCommand command = new SqlCommand(changeQuery, db.getConnection());
+                    command.ExecuteNonQuery();
+                }
+            }
+            db.closeConnection();
+        }
+
+        private void SearchRepair(DataGridView dgw)
+        {
+            dgw.Rows.Clear();
+
+            string searchString = $"select * from repair where concat (idrepair, fioclient, duedate, nameservice, fioemploye, serialnumber, price, daterepair) like '%" + textBoxSearchDevice.Text + "%'";
+
+            SqlCommand command = new SqlCommand(searchString, db.getConnection());
+
+            db.openConnection();
+
+            SqlDataReader read = command.ExecuteReader();
+
+            while (read.Read())
+            {
+                ReadSingleRowRepair(dgw, read);
+            }
+            read.Close();
+            db.closeConnection();
+        }
+        private void dataGridViewRepair_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            selectedRow = e.RowIndex;
+            if (e.RowIndex >= 0)
+            {
+                DataGridViewRow row = dataGridViewRepair.Rows[selectedRow];
+
+                textBoxIDRepair.Text = row.Cells[0].Value.ToString();
+                textBoxClientRepair.Text = row.Cells[1].Value.ToString();
+                textBoxDueDateRepair.Text = row.Cells[2].Value.ToString();                
+                textBoxServiceRepair.Text = row.Cells[3].Value.ToString();
+                textBoxEmployeRepair.Text = row.Cells[4].Value.ToString();
+                textBoxSerialNumRepair.Text = row.Cells[5].Value.ToString();
+                textBoxPriceRepair.Text = row.Cells[6].Value.ToString();
+                
+                dateTimePickerDateRepair.Value = Convert.ToDateTime(row.Cells[7].Value);
+
+            }
+        }
 
 
 
 
 
-        //private void CreateColumnsDevices()
-        //{
-        //    dataGridViewDevice.Columns.Add("id", "id");
-        //    dataGridViewDevice.Columns.Add("mark", "Марка");
-        //    dataGridViewDevice.Columns.Add("model", "Модель");
-        //    dataGridViewDevice.Columns.Add("serialnumber", "Серийный номер");
-        //    dataGridViewDevice.Columns.Add("duedate", "Дата сдачи устройства");
-        //    dataGridViewDevice.Columns.Add("EsNew", String.Empty);
-        //}
-
-        //private void ClearFieldsDevices()
-        //{
-        //    textBoxIDDevice.Text = "";
-        //    textBoxMarkDevice.Text = "";
-        //    textBoxModelDevice.Text = "";
-        //    textBoxSerialNumDevice.Text = "";
-        //    dateTimePickerDueDate.Value = DateTime.Now;
-        //}
+        private void buttonEditRepair_Click(object sender, EventArgs e)
+        {
+            ChangeRepair();
+            ClearFieldsRepair();
+        }
 
 
-        //private void ReadSingleRowDevices(DataGridView dgw, IDataRecord record)
-        //{
-        //    dgw.Rows.Add(record.GetInt32(0), record.GetString(1), record.GetString(2), record.GetString(3), record.GetDateTime(4), RowState.ModifiedNew);
-        //}
-        //private void RefreshDataGridDevices(DataGridView dgw)
-        //{
-        //    dgw.Rows.Clear();
+        private void buttonDeleteRepair_Click(object sender, EventArgs e)
+        {
+            deleteRowRepair();
+            ClearFieldsRepair();
+        }
 
-        //    string queryString = $"select * from devices";
+        private void buttonSaveRepair_Click(object sender, EventArgs e)
+        {
+            UpdateRepair();
+        }
 
-        //    SqlCommand command = new SqlCommand(queryString, db.getConnection());
-
-        //    db.openConnection();
-
-        //    SqlDataReader reader = command.ExecuteReader();
-
-        //    while (reader.Read())
-        //    {
-        //        ReadSingleRowDevices(dgw, reader);
-        //    }
-        //    reader.Close();
-        //    db.closeConnection();
-        //}
+        private void pictureBoxRefreshRepair_Click(object sender, EventArgs e)
+        {
+            RefreshDataGridRepair(dataGridViewRepair);
+            ClearFieldsRepair();
+        }
 
 
-        //private void ChangeDevices()
-        //{
-        //    var selectedRowIndex = dataGridViewDevice.CurrentCell.RowIndex;
-        //    var id = textBoxIDDevice.Text;
-        //    string mark = textBoxMarkDevice.Text;
-        //    string model = textBoxModelDevice.Text;
-        //    string serialnumber = textBoxSerialNumDevice.Text;
-        //    DateTime duedate = dateTimePickerDueDate.Value;
-
-        //    if (dataGridViewDevice.Rows[selectedRowIndex].Cells[0].Value.ToString() != string.Empty)
-        //    {
-        //        dataGridViewDevice.Rows[selectedRowIndex].SetValues(id, mark, model, serialnumber, duedate);
-        //        dataGridViewDevice.Rows[selectedRowIndex].Cells[5].Value = RowState.Modified;
-        //    }
-        //}
-
-        //private void deleteRowDevice()
-        //{
-        //    int index = dataGridViewDevice.CurrentCell.RowIndex;
-        //    dataGridViewDevice.Rows[index].Visible = false;
-        //    dataGridViewDevice.Rows[index].Cells[5].Value = RowState.Deleted;
-
-        //}
-
-        //private void UpdateDevice()
-        //{
-        //    db.openConnection();
-
-        //    for (int index = 0; index < dataGridViewDevice.Rows.Count; index++)
-        //    {
-        //        var rowState = (RowState)dataGridViewDevice.Rows[index].Cells[5].Value;
-
-        //        if (rowState == RowState.Existed)
-        //            continue;
-
-        //        if (rowState == RowState.Deleted)
-        //        {
-        //            var id = Convert.ToInt32(dataGridViewDevice.Rows[index].Cells[0].Value.ToString());
-        //            string deleteQuery = $"delete from devices where iddevice = '{id}'";
-
-        //            SqlCommand command = new SqlCommand(deleteQuery, db.getConnection());
-        //            command.ExecuteNonQuery();
-        //        }
-        //        if (rowState == RowState.Modified)
-        //        {
-        //            var iddevice = dataGridViewDevice.Rows[index].Cells[0].Value.ToString();
-        //            var mark = dataGridViewDevice.Rows[index].Cells[1].Value.ToString();
-        //            var model = dataGridViewDevice.Rows[index].Cells[2].Value.ToString();
-        //            var serialnumber = dataGridViewDevice.Rows[index].Cells[3].Value.ToString();
-        //            DateTime duedate = Convert.ToDateTime(dataGridViewDevice.Rows[index].Cells[4].Value);
-
-
-        //            string changeQuery = $"update devices set mark = '{mark}', model = '{model}', serialnumber = '{serialnumber}', duedate = '{duedate}'  where iddevice = '{iddevice}'";
-
-        //            SqlCommand command = new SqlCommand(changeQuery, db.getConnection());
-        //            command.ExecuteNonQuery();
-        //        }
-        //    }
-        //    db.closeConnection();
-        //}
-
-        //private void SearchDevice(DataGridView dgw)
-        //{
-        //    dgw.Rows.Clear();
-
-        //    string searchString = $"select * from devices where concat (iddevice, mark, model, serialnumber, duedate) like '%" + textBoxSearchDevice.Text + "%'";
-
-        //    SqlCommand command = new SqlCommand(searchString, db.getConnection());
-
-        //    db.openConnection();
-
-        //    SqlDataReader read = command.ExecuteReader();
-
-        //    while (read.Read())
-        //    {
-        //        ReadSingleRowDevices(dgw, read);
-        //    }
-        //    read.Close();
-        //    db.closeConnection();
-        //}
-        //private void dataGridViewDevice_CellClick(object sender, DataGridViewCellEventArgs e)
-        //{
-        //    selectedRow = e.RowIndex;
-        //    if (e.RowIndex >= 0)
-        //    {
-        //        DataGridViewRow row = dataGridViewDevice.Rows[selectedRow];
-        //        textBoxIDDevice.Text = row.Cells[0].Value.ToString();
-        //        textBoxMarkDevice.Text = row.Cells[1].Value.ToString();
-        //        textBoxModelDevice.Text = row.Cells[2].Value.ToString();
-        //        textBoxSerialNumDevice.Text = row.Cells[3].Value.ToString();
-        //        dateTimePickerDueDate.Value = Convert.ToDateTime(row.Cells[4].Value);
-        //    }
-        //}
-
-
-        //private void buttonNewDevice_Click(object sender, EventArgs e)
-        //{
-        //    AddDeviceForm addDeviceForm = new AddDeviceForm();
-        //    addDeviceForm.Show();
-        //}
-
-
-        //private void buttonEditDevice_Click(object sender, EventArgs e)
-        //{
-        //    ChangeDevices();
-        //    ClearFieldsDevices();
-        //}
-
-
-        //private void buttonDeleteDevice_Click(object sender, EventArgs e)
-        //{
-        //    deleteRowDevice();
-        //    ClearFieldsDevices();
-        //}
-
-        //private void buttonSaveDevice_Click(object sender, EventArgs e)
-        //{
-        //    UpdateDevice();
-        //}
-
-        //private void pictureBoxRefreshDevice_Click(object sender, EventArgs e)
-        //{
-        //    RefreshDataGridDevices(dataGridViewDevice);
-        //    ClearFieldsDevices();
-        //}
-
-
-        //private void pictureBoxEracerDevice_Click(object sender, EventArgs e)
-        //{
-        //    ClearFieldsDevices();
-        //}
+        private void pictureBoxEracerRepair_Click(object sender, EventArgs e)
+        {
+            ClearFieldsDevices();
+        }
 
 
 
-        //private void textBoxSearchDevice_TextChanged(object sender, EventArgs e)
-        //{
-        //    SearchDevice(dataGridViewDevice);
-        //}
+        private void textBoxSearchRepair_TextChanged(object sender, EventArgs e)
+        {
+            SearchDevice(dataGridViewDevice);
+        }
 
+        private void сохранитьВсеToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            UpdateClients();
+            UpdateDevice();
+            UpdateEmploye();
+            UpdateService();
+            UpdateRepair();
+        }
     }
 }

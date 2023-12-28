@@ -133,7 +133,6 @@
             this.panel16 = new System.Windows.Forms.Panel();
             this.buttonSaveRepair = new System.Windows.Forms.Button();
             this.buttonDeleteRepair = new System.Windows.Forms.Button();
-            this.buttonEditRepair = new System.Windows.Forms.Button();
             this.buttonNewRepair = new System.Windows.Forms.Button();
             this.label29 = new System.Windows.Forms.Label();
             this.dataGridViewRepair = new System.Windows.Forms.DataGridView();
@@ -141,16 +140,15 @@
             this.label34 = new System.Windows.Forms.Label();
             this.textBoxServiceRepair = new System.Windows.Forms.TextBox();
             this.label33 = new System.Windows.Forms.Label();
-            this.dateTimePicker1 = new System.Windows.Forms.DateTimePicker();
+            this.dateTimePickerDateRepair = new System.Windows.Forms.DateTimePicker();
             this.label32 = new System.Windows.Forms.Label();
             this.textBoxEmployeRepair = new System.Windows.Forms.TextBox();
             this.label22 = new System.Windows.Forms.Label();
             this.textBoxIDRepair = new System.Windows.Forms.TextBox();
-            this.textBoxDeviceRepair = new System.Windows.Forms.TextBox();
+            this.textBoxDueDateRepair = new System.Windows.Forms.TextBox();
             this.textBoxClientRepair = new System.Windows.Forms.TextBox();
             this.label23 = new System.Windows.Forms.Label();
             this.label24 = new System.Windows.Forms.Label();
-            this.label25 = new System.Windows.Forms.Label();
             this.pictureBox15 = new System.Windows.Forms.PictureBox();
             this.panel12 = new System.Windows.Forms.Panel();
             this.pictureBoxEracerRepair = new System.Windows.Forms.PictureBox();
@@ -160,8 +158,13 @@
             this.textBoxSearchRepair = new System.Windows.Forms.TextBox();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.файлToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.информацияToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.управлениеToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.buttonEditRepair = new System.Windows.Forms.Button();
+            this.textBoxPriceRepair = new System.Windows.Forms.TextBox();
+            this.label35 = new System.Windows.Forms.Label();
+            this.textBoxSerialNumRepair = new System.Windows.Forms.TextBox();
+            this.label25 = new System.Windows.Forms.Label();
+            this.сохранитьВсеToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.panel1.SuspendLayout();
             this.tabControl.SuspendLayout();
             this.tabClients.SuspendLayout();
@@ -222,7 +225,7 @@
             this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel1.Location = new System.Drawing.Point(0, 0);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(800, 585);
+            this.panel1.Size = new System.Drawing.Size(800, 612);
             this.panel1.TabIndex = 1;
             // 
             // textBoxUserStatus
@@ -245,7 +248,7 @@
             this.tabControl.Location = new System.Drawing.Point(0, 28);
             this.tabControl.Name = "tabControl";
             this.tabControl.SelectedIndex = 0;
-            this.tabControl.Size = new System.Drawing.Size(800, 557);
+            this.tabControl.Size = new System.Drawing.Size(800, 584);
             this.tabControl.TabIndex = 3;
             this.tabControl.SelectedIndexChanged += new System.EventHandler(this.tabControl_SelectedIndexChanged);
             // 
@@ -1351,7 +1354,7 @@
             this.tabRepDev.Controls.Add(this.panel12);
             this.tabRepDev.Location = new System.Drawing.Point(4, 25);
             this.tabRepDev.Name = "tabRepDev";
-            this.tabRepDev.Size = new System.Drawing.Size(792, 528);
+            this.tabRepDev.Size = new System.Drawing.Size(792, 555);
             this.tabRepDev.TabIndex = 4;
             this.tabRepDev.Text = "Ремонт";
             // 
@@ -1363,7 +1366,7 @@
             this.panel16.Controls.Add(this.buttonDeleteRepair);
             this.panel16.Controls.Add(this.buttonEditRepair);
             this.panel16.Controls.Add(this.buttonNewRepair);
-            this.panel16.Location = new System.Drawing.Point(522, 340);
+            this.panel16.Location = new System.Drawing.Point(522, 367);
             this.panel16.Name = "panel16";
             this.panel16.Size = new System.Drawing.Size(264, 181);
             this.panel16.TabIndex = 10;
@@ -1377,6 +1380,7 @@
             this.buttonSaveRepair.TabIndex = 3;
             this.buttonSaveRepair.Text = "Сохранить";
             this.buttonSaveRepair.UseVisualStyleBackColor = false;
+            this.buttonSaveRepair.Click += new System.EventHandler(this.buttonSaveRepair_Click);
             // 
             // buttonDeleteRepair
             // 
@@ -1387,16 +1391,7 @@
             this.buttonDeleteRepair.TabIndex = 2;
             this.buttonDeleteRepair.Text = "Удалить";
             this.buttonDeleteRepair.UseVisualStyleBackColor = false;
-            // 
-            // buttonEditRepair
-            // 
-            this.buttonEditRepair.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(189)))), ((int)(((byte)(180)))), ((int)(((byte)(164)))));
-            this.buttonEditRepair.Location = new System.Drawing.Point(19, 47);
-            this.buttonEditRepair.Name = "buttonEditRepair";
-            this.buttonEditRepair.Size = new System.Drawing.Size(231, 33);
-            this.buttonEditRepair.TabIndex = 1;
-            this.buttonEditRepair.Text = "Изменить";
-            this.buttonEditRepair.UseVisualStyleBackColor = false;
+            this.buttonDeleteRepair.Click += new System.EventHandler(this.buttonDeleteRepair_Click);
             // 
             // buttonNewRepair
             // 
@@ -1413,7 +1408,7 @@
             // 
             this.label29.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.label29.AutoSize = true;
-            this.label29.Location = new System.Drawing.Point(522, 321);
+            this.label29.Location = new System.Drawing.Point(522, 348);
             this.label29.Name = "label29";
             this.label29.Size = new System.Drawing.Size(154, 16);
             this.label29.TabIndex = 9;
@@ -1433,29 +1428,33 @@
             this.dataGridViewRepair.ReadOnly = true;
             this.dataGridViewRepair.RowHeadersWidth = 51;
             this.dataGridViewRepair.RowTemplate.Height = 24;
-            this.dataGridViewRepair.Size = new System.Drawing.Size(783, 263);
+            this.dataGridViewRepair.Size = new System.Drawing.Size(783, 288);
             this.dataGridViewRepair.TabIndex = 8;
+            this.dataGridViewRepair.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridViewRepair_CellClick);
             // 
             // panel11
             // 
             this.panel11.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panel11.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel11.Controls.Add(this.label25);
+            this.panel11.Controls.Add(this.textBoxSerialNumRepair);
+            this.panel11.Controls.Add(this.label35);
+            this.panel11.Controls.Add(this.textBoxPriceRepair);
             this.panel11.Controls.Add(this.label34);
             this.panel11.Controls.Add(this.textBoxServiceRepair);
             this.panel11.Controls.Add(this.label33);
-            this.panel11.Controls.Add(this.dateTimePicker1);
+            this.panel11.Controls.Add(this.dateTimePickerDateRepair);
             this.panel11.Controls.Add(this.label32);
             this.panel11.Controls.Add(this.textBoxEmployeRepair);
             this.panel11.Controls.Add(this.label22);
             this.panel11.Controls.Add(this.textBoxIDRepair);
-            this.panel11.Controls.Add(this.textBoxDeviceRepair);
+            this.panel11.Controls.Add(this.textBoxDueDateRepair);
             this.panel11.Controls.Add(this.textBoxClientRepair);
             this.panel11.Controls.Add(this.label23);
             this.panel11.Controls.Add(this.label24);
-            this.panel11.Controls.Add(this.label25);
             this.panel11.Controls.Add(this.pictureBox15);
-            this.panel11.Location = new System.Drawing.Point(2, 321);
+            this.panel11.Location = new System.Drawing.Point(2, 346);
             this.panel11.Name = "panel11";
             this.panel11.Size = new System.Drawing.Size(514, 200);
             this.panel11.TabIndex = 7;
@@ -1463,17 +1462,17 @@
             // label34
             // 
             this.label34.AutoSize = true;
-            this.label34.Location = new System.Drawing.Point(99, 86);
+            this.label34.Location = new System.Drawing.Point(102, 62);
             this.label34.Name = "label34";
-            this.label34.Size = new System.Drawing.Size(84, 16);
+            this.label34.Size = new System.Drawing.Size(81, 16);
             this.label34.TabIndex = 16;
-            this.label34.Text = "Устройство";
+            this.label34.Text = "Дата сдачи";
             // 
             // textBoxServiceRepair
             // 
             this.textBoxServiceRepair.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxServiceRepair.Location = new System.Drawing.Point(189, 138);
+            this.textBoxServiceRepair.Location = new System.Drawing.Point(192, 118);
             this.textBoxServiceRepair.Name = "textBoxServiceRepair";
             this.textBoxServiceRepair.ReadOnly = true;
             this.textBoxServiceRepair.Size = new System.Drawing.Size(303, 22);
@@ -1482,23 +1481,23 @@
             // label33
             // 
             this.label33.AutoSize = true;
-            this.label33.Location = new System.Drawing.Point(61, 171);
+            this.label33.Location = new System.Drawing.Point(61, 178);
             this.label33.Name = "label33";
             this.label33.Size = new System.Drawing.Size(122, 16);
             this.label33.TabIndex = 14;
             this.label33.Text = "Дата выполнения";
             // 
-            // dateTimePicker1
+            // dateTimePickerDateRepair
             // 
-            this.dateTimePicker1.Location = new System.Drawing.Point(189, 166);
-            this.dateTimePicker1.Name = "dateTimePicker1";
-            this.dateTimePicker1.Size = new System.Drawing.Size(303, 22);
-            this.dateTimePicker1.TabIndex = 13;
+            this.dateTimePickerDateRepair.Location = new System.Drawing.Point(192, 173);
+            this.dateTimePickerDateRepair.Name = "dateTimePickerDateRepair";
+            this.dateTimePickerDateRepair.Size = new System.Drawing.Size(303, 22);
+            this.dateTimePickerDateRepair.TabIndex = 13;
             // 
             // label32
             // 
             this.label32.AutoSize = true;
-            this.label32.Location = new System.Drawing.Point(39, 141);
+            this.label32.Location = new System.Drawing.Point(42, 121);
             this.label32.Name = "label32";
             this.label32.Size = new System.Drawing.Size(144, 16);
             this.label32.TabIndex = 9;
@@ -1508,7 +1507,7 @@
             // 
             this.textBoxEmployeRepair.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxEmployeRepair.Location = new System.Drawing.Point(189, 110);
+            this.textBoxEmployeRepair.Location = new System.Drawing.Point(192, 87);
             this.textBoxEmployeRepair.Name = "textBoxEmployeRepair";
             this.textBoxEmployeRepair.ReadOnly = true;
             this.textBoxEmployeRepair.Size = new System.Drawing.Size(303, 22);
@@ -1517,7 +1516,7 @@
             // label22
             // 
             this.label22.AutoSize = true;
-            this.label22.Location = new System.Drawing.Point(163, 30);
+            this.label22.Location = new System.Drawing.Point(166, 6);
             this.label22.Name = "label22";
             this.label22.Size = new System.Drawing.Size(20, 16);
             this.label22.TabIndex = 7;
@@ -1527,27 +1526,27 @@
             // 
             this.textBoxIDRepair.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxIDRepair.Location = new System.Drawing.Point(189, 27);
+            this.textBoxIDRepair.Location = new System.Drawing.Point(192, 3);
             this.textBoxIDRepair.Name = "textBoxIDRepair";
             this.textBoxIDRepair.ReadOnly = true;
             this.textBoxIDRepair.Size = new System.Drawing.Size(303, 22);
             this.textBoxIDRepair.TabIndex = 6;
             // 
-            // textBoxDeviceRepair
+            // textBoxDueDateRepair
             // 
-            this.textBoxDeviceRepair.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.textBoxDueDateRepair.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxDeviceRepair.Location = new System.Drawing.Point(189, 83);
-            this.textBoxDeviceRepair.Name = "textBoxDeviceRepair";
-            this.textBoxDeviceRepair.ReadOnly = true;
-            this.textBoxDeviceRepair.Size = new System.Drawing.Size(303, 22);
-            this.textBoxDeviceRepair.TabIndex = 5;
+            this.textBoxDueDateRepair.Location = new System.Drawing.Point(192, 59);
+            this.textBoxDueDateRepair.Name = "textBoxDueDateRepair";
+            this.textBoxDueDateRepair.ReadOnly = true;
+            this.textBoxDueDateRepair.Size = new System.Drawing.Size(303, 22);
+            this.textBoxDueDateRepair.TabIndex = 5;
             // 
             // textBoxClientRepair
             // 
             this.textBoxClientRepair.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxClientRepair.Location = new System.Drawing.Point(189, 55);
+            this.textBoxClientRepair.Location = new System.Drawing.Point(192, 31);
             this.textBoxClientRepair.Name = "textBoxClientRepair";
             this.textBoxClientRepair.ReadOnly = true;
             this.textBoxClientRepair.Size = new System.Drawing.Size(303, 22);
@@ -1556,7 +1555,7 @@
             // label23
             // 
             this.label23.AutoSize = true;
-            this.label23.Location = new System.Drawing.Point(63, 113);
+            this.label23.Location = new System.Drawing.Point(66, 93);
             this.label23.Name = "label23";
             this.label23.Size = new System.Drawing.Size(120, 16);
             this.label23.TabIndex = 3;
@@ -1565,20 +1564,11 @@
             // label24
             // 
             this.label24.AutoSize = true;
-            this.label24.Location = new System.Drawing.Point(87, 58);
+            this.label24.Location = new System.Drawing.Point(90, 34);
             this.label24.Name = "label24";
             this.label24.Size = new System.Drawing.Size(96, 16);
             this.label24.TabIndex = 2;
             this.label24.Text = "ФИО Клиента";
-            // 
-            // label25
-            // 
-            this.label25.AutoSize = true;
-            this.label25.Location = new System.Drawing.Point(65, 18);
-            this.label25.Name = "label25";
-            this.label25.Size = new System.Drawing.Size(57, 16);
-            this.label25.TabIndex = 1;
-            this.label25.Text = "Запись:";
             // 
             // pictureBox15
             // 
@@ -1614,6 +1604,7 @@
             this.pictureBoxEracerRepair.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.pictureBoxEracerRepair.TabIndex = 5;
             this.pictureBoxEracerRepair.TabStop = false;
+            this.pictureBoxEracerRepair.Click += new System.EventHandler(this.pictureBoxEracerRepair_Click);
             // 
             // pictureBoxRefreshRepair
             // 
@@ -1626,6 +1617,7 @@
             this.pictureBoxRefreshRepair.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.pictureBoxRefreshRepair.TabIndex = 4;
             this.pictureBoxRefreshRepair.TabStop = false;
+            this.pictureBoxRefreshRepair.Click += new System.EventHandler(this.pictureBoxRefreshRepair_Click);
             // 
             // label21
             // 
@@ -1655,13 +1647,13 @@
             this.textBoxSearchRepair.Name = "textBoxSearchRepair";
             this.textBoxSearchRepair.Size = new System.Drawing.Size(178, 22);
             this.textBoxSearchRepair.TabIndex = 1;
+            this.textBoxSearchRepair.TextChanged += new System.EventHandler(this.textBoxSearchRepair_TextChanged);
             // 
             // menuStrip1
             // 
             this.menuStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.файлToolStripMenuItem,
-            this.информацияToolStripMenuItem,
             this.управлениеToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
@@ -1671,15 +1663,11 @@
             // 
             // файлToolStripMenuItem
             // 
+            this.файлToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.сохранитьВсеToolStripMenuItem});
             this.файлToolStripMenuItem.Name = "файлToolStripMenuItem";
-            this.файлToolStripMenuItem.Size = new System.Drawing.Size(59, 24);
+            this.файлToolStripMenuItem.Size = new System.Drawing.Size(59, 26);
             this.файлToolStripMenuItem.Text = "Файл";
-            // 
-            // информацияToolStripMenuItem
-            // 
-            this.информацияToolStripMenuItem.Name = "информацияToolStripMenuItem";
-            this.информацияToolStripMenuItem.Size = new System.Drawing.Size(116, 24);
-            this.информацияToolStripMenuItem.Text = "Информация";
             // 
             // управлениеToolStripMenuItem
             // 
@@ -1688,11 +1676,67 @@
             this.управлениеToolStripMenuItem.Text = "Управление";
             this.управлениеToolStripMenuItem.Click += new System.EventHandler(this.управлениеToolStripMenuItem_Click);
             // 
+            // buttonEditRepair
+            // 
+            this.buttonEditRepair.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(189)))), ((int)(((byte)(180)))), ((int)(((byte)(164)))));
+            this.buttonEditRepair.Location = new System.Drawing.Point(19, 47);
+            this.buttonEditRepair.Name = "buttonEditRepair";
+            this.buttonEditRepair.Size = new System.Drawing.Size(231, 33);
+            this.buttonEditRepair.TabIndex = 1;
+            this.buttonEditRepair.Text = "Изменить";
+            this.buttonEditRepair.UseVisualStyleBackColor = false;
+            this.buttonEditRepair.Click += new System.EventHandler(this.buttonEditRepair_Click);
+            // 
+            // textBoxPriceRepair
+            // 
+            this.textBoxPriceRepair.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxPriceRepair.Location = new System.Drawing.Point(85, 145);
+            this.textBoxPriceRepair.Name = "textBoxPriceRepair";
+            this.textBoxPriceRepair.ReadOnly = true;
+            this.textBoxPriceRepair.Size = new System.Drawing.Size(87, 22);
+            this.textBoxPriceRepair.TabIndex = 17;
+            // 
+            // label35
+            // 
+            this.label35.AutoSize = true;
+            this.label35.Location = new System.Drawing.Point(2, 148);
+            this.label35.Name = "label35";
+            this.label35.Size = new System.Drawing.Size(77, 16);
+            this.label35.TabIndex = 18;
+            this.label35.Text = "Стоимость";
+            // 
+            // textBoxSerialNumRepair
+            // 
+            this.textBoxSerialNumRepair.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxSerialNumRepair.Location = new System.Drawing.Point(312, 145);
+            this.textBoxSerialNumRepair.Name = "textBoxSerialNumRepair";
+            this.textBoxSerialNumRepair.ReadOnly = true;
+            this.textBoxSerialNumRepair.Size = new System.Drawing.Size(183, 22);
+            this.textBoxSerialNumRepair.TabIndex = 19;
+            // 
+            // label25
+            // 
+            this.label25.AutoSize = true;
+            this.label25.Location = new System.Drawing.Point(189, 148);
+            this.label25.Name = "label25";
+            this.label25.Size = new System.Drawing.Size(117, 16);
+            this.label25.TabIndex = 20;
+            this.label25.Text = "Серийный номер";
+            // 
+            // сохранитьВсеToolStripMenuItem
+            // 
+            this.сохранитьВсеToolStripMenuItem.Name = "сохранитьВсеToolStripMenuItem";
+            this.сохранитьВсеToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.сохранитьВсеToolStripMenuItem.Text = "Сохранить все";
+            this.сохранитьВсеToolStripMenuItem.Click += new System.EventHandler(this.сохранитьВсеToolStripMenuItem_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 585);
+            this.ClientSize = new System.Drawing.Size(800, 612);
             this.Controls.Add(this.panel1);
             this.Name = "MainForm";
             this.Text = "MainForm";
@@ -1774,7 +1818,6 @@
         private System.Windows.Forms.PictureBox pictureBoxSearch;
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.ToolStripMenuItem файлToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem информацияToolStripMenuItem;
         private System.Windows.Forms.TabControl tabControl;
         private System.Windows.Forms.TabPage tabClients;
         private System.Windows.Forms.TabPage tabDevices;
@@ -1854,11 +1897,10 @@
         private System.Windows.Forms.Panel panel11;
         private System.Windows.Forms.Label label22;
         private System.Windows.Forms.TextBox textBoxIDRepair;
-        private System.Windows.Forms.TextBox textBoxDeviceRepair;
+        private System.Windows.Forms.TextBox textBoxDueDateRepair;
         private System.Windows.Forms.TextBox textBoxClientRepair;
         private System.Windows.Forms.Label label23;
         private System.Windows.Forms.Label label24;
-        private System.Windows.Forms.Label label25;
         private System.Windows.Forms.PictureBox pictureBox15;
         private System.Windows.Forms.Panel panel12;
         private System.Windows.Forms.PictureBox pictureBoxEracerRepair;
@@ -1890,7 +1932,6 @@
         private System.Windows.Forms.Panel panel16;
         private System.Windows.Forms.Button buttonSaveRepair;
         private System.Windows.Forms.Button buttonDeleteRepair;
-        private System.Windows.Forms.Button buttonEditRepair;
         private System.Windows.Forms.Button buttonNewRepair;
         private System.Windows.Forms.Label label29;
         private System.Windows.Forms.DateTimePicker dateTimePickerDueDate;
@@ -1898,8 +1939,14 @@
         private System.Windows.Forms.Label label32;
         private System.Windows.Forms.TextBox textBoxEmployeRepair;
         private System.Windows.Forms.Label label33;
-        private System.Windows.Forms.DateTimePicker dateTimePicker1;
+        private System.Windows.Forms.DateTimePicker dateTimePickerDateRepair;
         private System.Windows.Forms.Label label34;
         private System.Windows.Forms.TextBox textBoxServiceRepair;
+        private System.Windows.Forms.Button buttonEditRepair;
+        private System.Windows.Forms.Label label25;
+        private System.Windows.Forms.TextBox textBoxSerialNumRepair;
+        private System.Windows.Forms.Label label35;
+        private System.Windows.Forms.TextBox textBoxPriceRepair;
+        private System.Windows.Forms.ToolStripMenuItem сохранитьВсеToolStripMenuItem;
     }
 }

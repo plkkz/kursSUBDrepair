@@ -13,108 +13,176 @@ namespace bdkurs
 {
     public partial class AddRepairForm : Form
     {
-        //    DB db = new DB();
-        //    private BindingSource client;
-        //    private BindingSource device;
-        //    private BindingSource employe;
-        //    private BindingSource service;
-        //    public AddRepairForm()
-        //    {
-        //        InitializeComponent();
 
-        //        StartPosition = FormStartPosition.CenterScreen;
 
-        //        client = new BindingSource();
-        //        client.DataSource = typeof(ComboItem);
-        //        comboBoxClient.DataSource = client;
-        //        comboBoxClient.DisplayMember = nameof(ComboItem.Text);
+        DB db = new DB();
 
-        //        device = new BindingSource();
-        //        device.DataSource = typeof(ComboItem);
-        //        comboBoxDevice.DataSource = device;
-        //        comboBoxDevice.DisplayMember = nameof(ComboItem.Text);
+        private void LoadComboBoxClients()
+        {
+            db.openConnection();
 
-        //        employe = new BindingSource();
-        //        employe.DataSource = typeof(ComboItem);
-        //        comboBoxEmploye.DataSource = employe;
-        //        comboBoxEmploye.DisplayMember = nameof(ComboItem.Text);
+            string query = "select * from clients";
+            using (SqlCommand command = new SqlCommand(query, db.getConnection()))
+            {
+            command.CommandType = CommandType.Text;
+            DataTable table = new DataTable();
+            SqlDataAdapter adapter = new SqlDataAdapter(command);
+            adapter.Fill(table);
 
-        //        service = new BindingSource();
-        //        service.DataSource = typeof(ComboItem);
-        //        comboBoxService.DataSource = service;
-        //        comboBoxService.DisplayMember = nameof(ComboItem.Text);
+            comboBoxClient.DisplayMember = "fio";
+            comboBoxClient.ValueMember = "id";
+            comboBoxClient.DataSource = table;
+            }
 
-        //        this.Load += FormMain_Load;
-    }
-
-        //private async void FormMain_Load(object sender, EventArgs e)
-        //{
-        //    //извлекаем из БД типы комнат, заполняем комбобокс
-        //    await LoadClientsAsync();
-        //    //подписка на событие выбора типа комнаты
-        //    _bsTypes.CurrentChanged += OnRoomTypeSelected;
-        //}
-
-        ///// <summary>
-        ///// После выбора типа комнат
-        ///// </summary>
-        ///// <param name="sender"></param>
-        ///// <param name="e"></param>
-        //private async void OnRoomTypeSelected(object sender, EventArgs e)
-        //{
-        //    //определяем Id выбранного пункта
-        //    int selectedId = (_bsTypes.Current as ComboItem).Id;
-        //    //очищаем комбобокс
-        //    _bsNumbers.Clear();
-
-        //    //в случае выбора "Любой"
-        //    if (selectedId == 0)
-        //    {
-        //        _bsNumbers.Add(new ComboItem { Text = "Нет выбора" });
-        //        return;
-        //    }
-
-        //    await LoadRoomNumbersByTypeIdAsync(selectedId);
-        //}
-
-        ///// <summary>
-        ///// Заполение комбобкса типов комнат
-        ///// </summary>
-        ///// <returns></returns>
-        //private async Task LoadClientsAsync()
-        //{
-        //    db.openConnection();
-
-        //    try
-        //    {
-        //        using (var con = new SqlConnection(_conString))
-        //        using (var cmd = con.CreateCommand())
-        //        {
-        //            cmd.CommandText = @"SELECT Id
-        //                         , Name
-        //                        FROM RoomTypes
-        //                        ORDER BY Name;";
-        //            await con.OpenAsync();
-        //            using (var reader = await cmd.ExecuteReaderAsync())
-        //            {
-        //                while (await reader.ReadAsync())
-        //                {
-        //                    var ci = new ComboItem
-        //                    {
-        //                        Id = reader.GetInt32(0),
-        //                        Text = reader.GetString(1)
-        //                    };
-        //                    _bsTypes.Add(ci);
-        //                }
-        //            }
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        MessageBox.Show(ex.Message, "Ошибка",
-        //            MessageBoxButtons.OK, MessageBoxIcon.Error);
-        //    }
+            db.closeConnection();
         }
+        private void LoadComboBoxDevices()
+        {
+            string query = "select * from devices";
+            SqlCommand command = new SqlCommand(query, db.getConnection());
+
+            db.openConnection();
+
+            command.CommandType = CommandType.Text;
+            DataTable table = new DataTable();
+            SqlDataAdapter adapter = new SqlDataAdapter(command);
+            adapter.Fill(table);
+            comboBoxDevice.DisplayMember = "duedate";
+            comboBoxDevice.ValueMember = "iddevice";
+            comboBoxDevice.DataSource = table;
+
+            db.closeConnection();
+        }
+        private void LoadComboBoxServices()
+        {
+            string query = "select * from service";
+            SqlCommand command = new SqlCommand(query, db.getConnection());
+
+            db.openConnection();
+
+            command.CommandType = CommandType.Text;
+            DataTable table = new DataTable();
+            SqlDataAdapter adapter = new SqlDataAdapter(command);
+            adapter.Fill(table);
+            comboBoxService.DisplayMember = "nameservice";
+            comboBoxService.ValueMember = "idservice";
+            comboBoxService.DataSource = table;
+
+            db.closeConnection();
+        }
+
+        private void LoadComboBoxEmployes()
+        {
+            string query = "select * from employes";
+            SqlCommand command = new SqlCommand(query, db.getConnection());
+
+            db.openConnection();
+
+            command.CommandType = CommandType.Text;
+            DataTable table = new DataTable();
+            SqlDataAdapter adapter = new SqlDataAdapter(command);
+            adapter.Fill(table);
+            comboBoxEmploye.DisplayMember = "fio";
+            comboBoxEmploye.ValueMember = "idemploye";
+            comboBoxEmploye.DataSource = table;
+
+            db.closeConnection();
+        }
+
+        private void LoadComboBoxSerialNum()
+        {
+            var duedate = comboBoxDevice.Text;
+            string queryDevices = $"select * from devices where duedate = '{duedate}'";
+            SqlCommand commandDevices = new SqlCommand(queryDevices, db.getConnection());
+
+            db.openConnection();
+
+            commandDevices.CommandType = CommandType.Text;
+            DataTable table = new DataTable();
+            SqlDataAdapter adapter = new SqlDataAdapter(commandDevices);
+            adapter.Fill(table);
+            comboBoxSerialNum.DisplayMember = "serialnumber";
+            comboBoxSerialNum.ValueMember = "iddevice";
+            comboBoxSerialNum.DataSource = table;
+
+            db.closeConnection();
+        }
+
+        private void LoadComboBoxPrice()
+        {
+            var nameservice = comboBoxService.Text;
+            string queryDevices = $"select * from service where nameservice = '{nameservice}'";
+            SqlCommand commandDevices = new SqlCommand(queryDevices, db.getConnection());
+
+            db.openConnection();
+
+            commandDevices.CommandType = CommandType.Text;
+            DataTable table = new DataTable();
+            SqlDataAdapter adapter = new SqlDataAdapter(commandDevices);
+            adapter.Fill(table);
+
+            
+            comboBoxPrice.DisplayMember = "price";
+            comboBoxPrice.ValueMember = "idservice";
+            comboBoxPrice.DataSource = table;
+
+            db.closeConnection();
+
+        }
+
+        public AddRepairForm()
+        {
+            InitializeComponent();
+            StartPosition = FormStartPosition.CenterScreen;
+        }
+
+        private void AddRepairForm_Load(object sender, EventArgs e)
+        {
+            LoadComboBoxClients();
+            LoadComboBoxDevices();
+            LoadComboBoxServices();
+            LoadComboBoxEmployes();
+            
+            
+
+
+        }
+
+        private void comboBoxDevice_DisplayMemberChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void comboBoxService_TextChanged(object sender, EventArgs e)
+        {
+            LoadComboBoxPrice();
+        }
+
+        private void comboBoxDevice_TextChanged(object sender, EventArgs e)
+        {
+            LoadComboBoxSerialNum();
+        }  
+        private void buttonSave_Click(object sender, EventArgs e)
+        {
+            db.openConnection();
+            string fioclient = comboBoxClient.Text;
+            string duedate = comboBoxDevice.Text;  
+            string nameservice = comboBoxService.Text;
+            string fioemploye = comboBoxEmploye.Text;   
+            string serialnumber = comboBoxSerialNum.Text;
+            int price = int.Parse(comboBoxPrice.Text);
+            DateTime daterepair = dateTimePicker.Value;
+
+            string addQuery = $"insert into repair (fioclient, duedate, nameservice, fioemploye, serialnumber, price, daterepair) values ('{fioclient}', '{duedate}', '{nameservice}', '{fioemploye}', '{serialnumber}', '{price}', '{daterepair}')";
+            SqlCommand command = new SqlCommand(addQuery, db.getConnection());
+            command.ExecuteNonQuery();
+
+            MessageBox.Show("Запись успешно добавлена!");
+
+            db.closeConnection();
+        }
+    }     
+}
 
 
 
